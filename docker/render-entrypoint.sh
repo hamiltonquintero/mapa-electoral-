@@ -21,5 +21,11 @@ if [ "$RUN_MIGRATIONS" = "true" ]; then
     php artisan migrate --force || true
 fi
 
+# Ejecutar seeders si se define RUN_SEEDERS=true
+if [ "$RUN_SEEDERS" = "true" ]; then
+    echo "Ejecutando seeds iniciales..."
+    php artisan db:seed --force || true
+fi
+
 echo "Iniciando Apache en puerto ${PORT}..."
 exec apache2-foreground
