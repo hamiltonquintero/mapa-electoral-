@@ -8,7 +8,7 @@ import router from '@/router'
  * - Intercepta 403 y muestra toast de no autorizado
  */
 const api = axios.create({
-  baseURL: '/api/v1',
+  baseURL: (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '') + '/api/v1',
   withCredentials: true,
   headers: {
     'Accept': 'application/json',
