@@ -7,8 +7,12 @@ import router from '@/router'
  * - Intercepta 401 y redirige al login
  * - Intercepta 403 y muestra toast de no autorizado
  */
+const apiBase = import.meta.env.VITE_API_URL
+  ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
+  : (import.meta.env.DEV ? '' : 'https://tahoe-computer-hundred-action.trycloudflare.com')
+
 const api = axios.create({
-  baseURL: (import.meta.env.VITE_API_URL ? import.meta.env.VITE_API_URL.replace(/\/$/, '') : '') + '/api/v1',
+  baseURL: `${apiBase}/api/v1`,
   withCredentials: true,
   headers: {
     'Accept': 'application/json',
