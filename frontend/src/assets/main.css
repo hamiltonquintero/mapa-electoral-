@@ -1,0 +1,133 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Variables CSS ──────────────────────────────────────────── */
+:root {
+  --sidebar-width: 260px;
+  --panel-width: 360px;
+  --header-height: 56px;
+}
+
+/* ─── Base ──────────────────────────────────────────────────── */
+@layer base {
+  html { @apply h-full antialiased; }
+  body { @apply h-full bg-gray-50 text-gray-900; }
+  #app { @apply h-full; }
+
+  *:focus-visible {
+    @apply outline-2 outline-offset-2 outline-primary-500;
+  }
+}
+
+/* ─── Componentes reutilizables ─────────────────────────────── */
+@layer components {
+  .btn {
+    @apply inline-flex items-center justify-center gap-1.5 rounded-md px-3.5 py-2 text-sm font-medium
+           transition-all duration-150 focus-visible:outline-none disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-primary {
+    @apply btn bg-primary-600 text-white hover:bg-primary-700 active:bg-primary-800;
+  }
+  .btn-secondary {
+    @apply btn bg-white text-gray-700 border border-gray-300 hover:bg-gray-50 active:bg-gray-100;
+  }
+  .btn-danger {
+    @apply btn bg-red-600 text-white hover:bg-red-700 active:bg-red-800;
+  }
+  .btn-ghost {
+    @apply btn text-gray-600 hover:bg-gray-100 hover:text-gray-900;
+  }
+  .btn-sm {
+    @apply px-2.5 py-1.5 text-xs;
+  }
+  .btn-lg {
+    @apply px-5 py-2.5 text-base;
+  }
+
+  .input {
+    @apply block w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm
+           placeholder-gray-400 shadow-sm transition focus:border-primary-500 focus:ring-1
+           focus:ring-primary-500 disabled:bg-gray-50 disabled:text-gray-500;
+  }
+  .input-error {
+    @apply border-red-400 focus:border-red-500 focus:ring-red-500;
+  }
+
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+
+  .card {
+    @apply bg-white rounded-lg border border-gray-200 shadow-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium;
+  }
+  .badge-green  { @apply badge bg-green-100 text-green-800; }
+  .badge-yellow { @apply badge bg-yellow-100 text-yellow-800; }
+  .badge-red    { @apply badge bg-red-100 text-red-800; }
+  .badge-blue   { @apply badge bg-blue-100 text-blue-800; }
+  .badge-gray   { @apply badge bg-gray-100 text-gray-700; }
+
+  .stat-card {
+    @apply card p-4 flex flex-col gap-1;
+  }
+
+  /* Scrollbar minimalista */
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.300') transparent;
+  }
+  .scrollbar-thin::-webkit-scrollbar { width: 4px; }
+  .scrollbar-thin::-webkit-scrollbar-track { background: transparent; }
+  .scrollbar-thin::-webkit-scrollbar-thumb { @apply bg-gray-300 rounded-full; }
+}
+
+/* ─── MapLibre overrides ────────────────────────────────────── */
+.maplibregl-map {
+  font-family: 'Inter', sans-serif;
+}
+
+.maplibregl-ctrl-group {
+  @apply shadow-md rounded-lg overflow-hidden border border-gray-200 !important;
+}
+
+.maplibregl-ctrl-group button {
+  @apply w-8 h-8 !important;
+}
+
+.maplibregl-popup-content {
+  @apply rounded-lg shadow-lg p-3 text-sm border border-gray-200 !important;
+  padding: 12px 16px !important;
+}
+
+.maplibregl-popup-close-button {
+  @apply text-gray-500 hover:text-gray-800 text-lg pr-1 !important;
+}
+
+/* ─── Transiciones de ruta ──────────────────────────────────── */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.15s ease;
+}
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.slide-enter-active,
+.slide-leave-active {
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+.slide-enter-from {
+  transform: translateX(12px);
+  opacity: 0;
+}
+.slide-leave-to {
+  transform: translateX(-12px);
+  opacity: 0;
+}

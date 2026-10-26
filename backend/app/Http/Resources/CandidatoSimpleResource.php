@@ -1,0 +1,26 @@
+<?php
+
+namespace App\Http\Resources;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class CandidatoSimpleResource extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request $request): array
+    {
+        return [
+            'id' => $this->id,
+            'nombres' => $this->nombres,
+            'apellidos' => $this->apellidos,
+            'nombre_completo' => $this->nombre_completo,
+            'cargo' => $this->cargo,
+            'numero_lista' => $this->numero_lista,
+        ];
+    }
+}

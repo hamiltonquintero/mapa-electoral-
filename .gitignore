@@ -1,0 +1,26 @@
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+vendor/
+/frontend/node_modules/
+/backend/vendor/
+
+# Build outputs
+/frontend/dist/
+/backend/public/storage
+/backend/storage/*.key
+/backend/storage/logs/*.log
+/backend/storage/framework/cache/*
+/backend/storage/framework/sessions/*
+/backend/storage/framework/views/*
+
+# IDE and OS
+.vscode/
+.idea/
+.DS_Store
+*.log
+docker-compose.override.yml
