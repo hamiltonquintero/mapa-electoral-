@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/loaded-extensions', function () {
         return response()->json([
-            'commit' => 'v8-nullsafe-seed',
+            'commit' => 'v9-userid-fix',
             'pdo_drivers' => \PDO::getAvailableDrivers(),
             'loaded_extensions' => array_values(array_intersect(
                 get_loaded_extensions(),

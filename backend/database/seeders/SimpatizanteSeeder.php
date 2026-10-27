@@ -40,7 +40,7 @@ class SimpatizanteSeeder extends Seeder
         $allUsers = DB::table('users')->get();
         foreach ($allUsers as $u) {
             DB::table('usuario_campana')->updateOrInsert(
-                ['usuario_id' => $u->id, 'campana_id' => $campana->id],
+                ['user_id' => $u->id, 'campana_id' => $campana->id],
                 ['created_at' => now(), 'updated_at' => now()]
             );
         }
