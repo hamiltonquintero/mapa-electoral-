@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/loaded-extensions', function () {
         return response()->json([
-            'commit' => 'v6-command-guard',
+            'commit' => 'v7-clean-seed',
             'pdo_drivers' => \PDO::getAvailableDrivers(),
             'loaded_extensions' => array_values(array_intersect(
                 get_loaded_extensions(),
@@ -48,19 +48,8 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/seed-database', function () {
         try {
-            $dummy = new class {
-                public function info($msg) {}
-                public function warn($msg) {}
-                public function error($msg) {}
-            };
-
-            $puestosSeeder = new \Database\Seeders\PuestoVotacionSeeder();
-            $puestosSeeder->setCommand($dummy);
-            $puestosSeeder->run();
-
-            $simpSeeder = new \Database\Seeders\SimpatizanteSeeder();
-            $simpSeeder->setCommand($dummy);
-            $simpSeeder->run();
+            (new \Database\Seeders\PuestoVotacionSeeder())->run();
+            (new \Database\Seeders\SimpatizanteSeeder())->run();
 
             return response()->json([
                 'status' => 'success',
