@@ -9,7 +9,7 @@ import router from '@/router'
  */
 const apiBase = import.meta.env.VITE_API_URL
   ? import.meta.env.VITE_API_URL.replace(/\/$/, '')
-  : (import.meta.env.DEV ? '' : 'https://tahoe-computer-hundred-action.trycloudflare.com')
+  : (import.meta.env.DEV ? '' : 'https://mapa-electoral.onrender.com')
 
 const api = axios.create({
   baseURL: `${apiBase}/api/v1`,
