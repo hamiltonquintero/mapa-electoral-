@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/loaded-extensions', function () {
         return response()->json([
-            'commit' => 'v3-data-fix',
+            'commit' => 'v4-idempotent-seed',
             'pdo_drivers' => \PDO::getAvailableDrivers(),
             'loaded_extensions' => array_values(array_intersect(
                 get_loaded_extensions(),
@@ -44,6 +44,31 @@ Route::prefix('v1')->group(function () {
             'db_connection' => config('database.default'),
             'database_url' => env('DATABASE_URL') ? 'configured' : 'missing',
         ]);
+    });
+
+    Route::get('/seed-database', function () {
+        try {
+            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
+            $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
+
+            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
+            $seedOutput = \Illuminate\Support\Facades\Artisan::output();
+
+            return response()->json([
+                'status' => 'success',
+                'migrate' => $migrateOutput,
+                'seed' => $seedOutput,
+                'puestos_votacion' => \Illuminate\Support\Facades\DB::table('puestos_votacion')->count(),
+                'simpatizantes' => \Illuminate\Support\Facades\DB::table('simpatizantes')->count(),
+                'campanas' => \Illuminate\Support\Facades\DB::table('campanas')->count(),
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'file' => $e->getFile() . ':' . $e->getLine(),
+            ], 500);
+        }
     });
 
     // Ruta fallback para peticiones sin token

@@ -71,7 +71,7 @@ class RolePermissionSeeder extends Seeder
         ];
 
         foreach ($permissions as $permission) {
-            Permission::create(['name' => $permission, 'guard_name' => 'web']);
+            Permission::firstOrCreate(['name' => $permission, 'guard_name' => 'web']);
         }
 
         // Crear roles y asignar permisos
@@ -90,10 +90,10 @@ class RolePermissionSeeder extends Seeder
      */
     private function createSuperadminRole(): void
     {
-        $role = Role::create(['name' => 'Superadministrador', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'Superadministrador', 'guard_name' => 'web']);
         
         // Tiene todos los permisos
-        $role->givePermissionTo(Permission::all());
+        $role->syncPermissions(Permission::all());
         
         $this->command->info('  → Superadministrador (todos los permisos)');
     }
@@ -103,9 +103,9 @@ class RolePermissionSeeder extends Seeder
      */
     private function createAdminCampanaRole(): void
     {
-        $role = Role::create(['name' => 'Administrador de Campaña', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'Administrador de Campaña', 'guard_name' => 'web']);
         
-        $role->givePermissionTo([
+        $role->syncPermissions([
             // Simpatizantes
             'simpatizante.ver',
             'simpatizante.crear',
@@ -152,9 +152,9 @@ class RolePermissionSeeder extends Seeder
      */
     private function createCoordinadorMunicipalRole(): void
     {
-        $role = Role::create(['name' => 'Coordinador Municipal', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'Coordinador Municipal', 'guard_name' => 'web']);
         
-        $role->givePermissionTo([
+        $role->syncPermissions([
             // Simpatizantes
             'simpatizante.ver',
             'simpatizante.crear',
@@ -183,9 +183,9 @@ class RolePermissionSeeder extends Seeder
      */
     private function createLiderZonaRole(): void
     {
-        $role = Role::create(['name' => 'Líder de Zona', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'Líder de Zona', 'guard_name' => 'web']);
         
-        $role->givePermissionTo([
+        $role->syncPermissions([
             // Simpatizantes
             'simpatizante.ver',
             'simpatizante.crear',
@@ -211,9 +211,9 @@ class RolePermissionSeeder extends Seeder
      */
     private function createDigitadorRole(): void
     {
-        $role = Role::create(['name' => 'Digitador', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'Digitador', 'guard_name' => 'web']);
         
-        $role->givePermissionTo([
+        $role->syncPermissions([
             // Simpatizantes (solo crear)
             'simpatizante.crear',
             
@@ -233,9 +233,9 @@ class RolePermissionSeeder extends Seeder
      */
     private function createAuditorRole(): void
     {
-        $role = Role::create(['name' => 'Auditor', 'guard_name' => 'web']);
+        $role = Role::firstOrCreate(['name' => 'Auditor', 'guard_name' => 'web']);
         
-        $role->givePermissionTo([
+        $role->syncPermissions([
             // Solo lectura
             'simpatizante.ver',
             'territorio.ver',

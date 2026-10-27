@@ -12,6 +12,13 @@ class TerritorioSeeder extends Seeder
      */
     public function run(): void
     {
+        // Si ya existen territorios, no duplicar
+        $existente = DB::table('territorios')->where('tipo', 'departamento')->where('nombre', 'Caldas')->first();
+        if ($existente) {
+            $this->command->info('✓ Territorios de Caldas ya existen (' . DB::table('territorios')->count() . ' territorios).');
+            return;
+        }
+
         // 1. Departamento de Caldas
         $caldas = DB::table('territorios')->insertGetId([
             'padre_id' => null,
