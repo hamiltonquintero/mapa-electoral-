@@ -11,6 +11,25 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('v1')->group(function () {
     
+    Route::get('/debug-db', function () {
+        try {
+            \Illuminate\Support\Facades\DB::connection()->getPdo();
+            $userCount = \Illuminate\Support\Facades\DB::table('users')->count();
+            return response()->json([
+                'status' => 'connected',
+                'driver' => \Illuminate\Support\Facades\DB::getDriverName(),
+                'database' => \Illuminate\Support\Facades\DB::getDatabaseName(),
+                'users' => $userCount,
+            ]);
+        } catch (\Throwable $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => $e->getMessage(),
+                'file' => $e->getFile() . ':' . $e->getLine(),
+            ], 500);
+        }
+    });
+
     // Ruta fallback para peticiones sin token
     Route::get('/login', fn() => response()->json(['message' => 'No autenticado.'], 401))->name('login');
 
