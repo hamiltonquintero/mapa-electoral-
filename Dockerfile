@@ -17,7 +17,6 @@ RUN apt-get update && apt-get install -y \
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-configure intl \
     && docker-php-ext-install -j$(nproc) \
-        pdo \
         pdo_mysql \
         pdo_pgsql \
         pgsql \
@@ -25,7 +24,8 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
         zip \
         bcmath \
         intl \
-        opcache
+        opcache \
+    && docker-php-ext-enable pdo_pgsql pgsql pdo_mysql
 
 # Habilitar módulo rewrite de Apache
 RUN a2enmod rewrite
