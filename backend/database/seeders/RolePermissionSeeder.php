@@ -82,7 +82,7 @@ class RolePermissionSeeder extends Seeder
         $this->createDigitadorRole();
         $this->createAuditorRole();
 
-        $this->command->info('✓ Roles y permisos creados exitosamente');
+        $this->command?->info('✓ Roles y permisos creados exitosamente');
     }
 
     /**
@@ -95,7 +95,7 @@ class RolePermissionSeeder extends Seeder
         // Tiene todos los permisos
         $role->syncPermissions(Permission::all());
         
-        $this->command->info('  → Superadministrador (todos los permisos)');
+        $this->command?->info('  → Superadministrador (todos los permisos)');
     }
 
     /**
@@ -144,7 +144,7 @@ class RolePermissionSeeder extends Seeder
             'lote.ver',
         ]);
         
-        $this->command->info('  → Administrador de Campaña');
+        $this->command?->info('  → Administrador de Campaña');
     }
 
     /**
@@ -175,7 +175,7 @@ class RolePermissionSeeder extends Seeder
             'lote.ver',
         ]);
         
-        $this->command->info('  → Coordinador Municipal');
+        $this->command?->info('  → Coordinador Municipal');
     }
 
     /**
@@ -203,7 +203,7 @@ class RolePermissionSeeder extends Seeder
             'lote.ver',
         ]);
         
-        $this->command->info('  → Líder de Zona');
+        $this->command?->info('  → Líder de Zona');
     }
 
     /**
@@ -225,7 +225,7 @@ class RolePermissionSeeder extends Seeder
             'lote.ver',
         ]);
         
-        $this->command->info('  → Digitador');
+        $this->command?->info('  → Digitador');
     }
 
     /**
@@ -246,6 +246,6 @@ class RolePermissionSeeder extends Seeder
             'lote.ver',
         ]);
         
-        $this->command->info('  → Auditor (solo lectura)');
+        $this->command?->info('  → Auditor (solo lectura)');
     }
 }

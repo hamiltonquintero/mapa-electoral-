@@ -15,7 +15,7 @@ class TerritorioSeeder extends Seeder
         // Si ya existen territorios, no duplicar
         $existente = DB::table('territorios')->where('tipo', 'departamento')->where('nombre', 'Caldas')->first();
         if ($existente) {
-            $this->command->info('✓ Territorios de Caldas ya existen (' . DB::table('territorios')->count() . ' territorios).');
+            $this->command?->info('✓ Territorios de Caldas ya existen (' . DB::table('territorios')->count() . ' territorios).');
             return;
         }
 
@@ -167,12 +167,12 @@ class TerritorioSeeder extends Seeder
             ]);
         }
 
-        $this->command->info('✓ Territorios de Caldas creados:');
-        $this->command->info('  → 1 Departamento (Caldas)');
-        $this->command->info('  → ' . count($municipios) . ' Municipios');
-        $this->command->info('  → 11 Comunas en Manizales');
-        $this->command->info('  → 5 Barrios en Comuna Palogrande');
-        $this->command->info('  → 4 Zonas en Villamaría');
-        $this->command->info('  → 4 Zonas en Chinchiná');
+        $this->command?->info('✓ Territorios de Caldas creados:');
+        $this->command?->info('  → 1 Departamento (Caldas)');
+        $this->command?->info('  → ' . count($municipios) . ' Municipios');
+        $this->command?->info('  → 11 Comunas en Manizales');
+        $this->command?->info('  → 5 Barrios en Comuna Palogrande');
+        $this->command?->info('  → 4 Zonas en Villamaría');
+        $this->command?->info('  → 4 Zonas en Chinchiná');
     }
 }

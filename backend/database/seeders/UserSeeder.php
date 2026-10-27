@@ -67,7 +67,7 @@ class UserSeeder extends Seeder
             if (!$user->hasRole($data['rol'])) {
                 $user->assignRole($data['rol']);
             }
-            $this->command->info("  ✓ Usuario verificado/creado: {$data['email']}");
+            $this->command?->info("  ✓ Usuario verificado/creado: {$data['email']}");
         }
     }
 }

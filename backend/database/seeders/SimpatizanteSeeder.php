@@ -12,7 +12,7 @@ class SimpatizanteSeeder extends Seeder
     {
         // Limpiar simpatizantes anteriores para evitar duplicados
         DB::table('simpatizantes')->delete();
-        $this->command->info('✓ Simpatizantes anteriores eliminados');
+        $this->command?->info('✓ Simpatizantes anteriores eliminados');
 
         // Obtener campaña
         $campana = DB::table('campanas')->orderBy('id')->first();
@@ -27,9 +27,9 @@ class SimpatizanteSeeder extends Seeder
                 'updated_at'  => now(),
             ]);
             $campana = DB::table('campanas')->find($campanaId);
-            $this->command->info('✓ Campaña creada: Campaña Electoral 2027');
+            $this->command?->info('✓ Campaña creada: Campaña Electoral 2027');
         } else {
-            $this->command->info('✓ Usando campaña: ' . $campana->nombre);
+            $this->command?->info('✓ Usando campaña: ' . $campana->nombre);
         }
 
         $superadminId = DB::table('users')->where('email', 'superadmin@mapa.com')->value('id') 
