@@ -3,8 +3,8 @@ FROM php:8.3-apache
 # Herramienta oficial recomendada para instalar extensiones PHP en Docker
 COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-# Instalar extensiones requeridas para Laravel (PostgreSQL, MySQL, GD, Zip, etc.)
-RUN install-php-extensions pdo_pgsql pgsql pdo_mysql gd zip bcmath intl opcache
+# Instalar extensiones requeridas para Laravel (PostgreSQL, MySQL, GD, Zip, BCMath, Opcache)
+RUN install-php-extensions pdo_pgsql pgsql pdo_mysql gd zip bcmath opcache
 
 # Instalar herramientas básicas del sistema
 RUN apt-get update && apt-get install -y git unzip curl && rm -rf /var/lib/apt/lists/*

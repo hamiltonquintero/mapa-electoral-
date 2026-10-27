@@ -1,0 +1,14 @@
+.git
+.github
+frontend
+node_modules
+backend/vendor
+backend/bootstrap/cache/*.php
+backend/.env
+backend/storage/logs/*.log
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+backend/php.ini
+backend/*.sql
+*.md

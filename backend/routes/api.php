@@ -32,8 +32,12 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/loaded-extensions', function () {
         return response()->json([
-            'commit' => '3a9f930',
+            'commit' => 'v2-fix',
             'pdo_drivers' => \PDO::getAvailableDrivers(),
+            'loaded_extensions' => array_values(array_intersect(
+                get_loaded_extensions(),
+                ['pdo_pgsql', 'pgsql', 'pdo_mysql', 'gd', 'zip', 'bcmath', 'opcache']
+            )),
             'db_connection' => config('database.default'),
             'database_url' => env('DATABASE_URL') ? 'configured' : 'missing',
         ]);

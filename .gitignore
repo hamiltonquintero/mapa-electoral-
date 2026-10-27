@@ -27,3 +27,4 @@ vendor/
 .DS_Store
 *.log
 docker-compose.override.yml
+*.sql
