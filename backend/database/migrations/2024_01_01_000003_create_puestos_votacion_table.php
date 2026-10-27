@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('direccion')->nullable();
             $table->integer('total_mesas')->default(0);
             $table->string('codigo_registraduria', 20)->nullable();
-            $table->foreignId('importacion_id')->nullable()->constrained('importaciones')->onDelete('set null');
+            $table->unsignedBigInteger('importacion_id')->nullable();
             $table->timestamps();
 
             $table->index('territorio_id');
