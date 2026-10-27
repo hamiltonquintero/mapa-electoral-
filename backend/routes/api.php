@@ -14,12 +14,15 @@ Route::prefix('v1')->group(function () {
     Route::get('/debug-db', function () {
         try {
             \Illuminate\Support\Facades\DB::connection()->getPdo();
-            $userCount = \Illuminate\Support\Facades\DB::table('users')->count();
             return response()->json([
                 'status' => 'connected',
                 'driver' => \Illuminate\Support\Facades\DB::getDriverName(),
                 'database' => \Illuminate\Support\Facades\DB::getDatabaseName(),
-                'users' => $userCount,
+                'users' => \Illuminate\Support\Facades\DB::table('users')->count(),
+                'campanas' => \Illuminate\Support\Facades\DB::table('campanas')->count(),
+                'territorios' => \Illuminate\Support\Facades\DB::table('territorios')->count(),
+                'puestos_votacion' => \Illuminate\Support\Facades\DB::table('puestos_votacion')->count(),
+                'simpatizantes' => \Illuminate\Support\Facades\DB::table('simpatizantes')->count(),
             ]);
         } catch (\Throwable $e) {
             return response()->json([
@@ -32,7 +35,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/loaded-extensions', function () {
         return response()->json([
-            'commit' => 'v2-fix',
+            'commit' => 'v3-data-fix',
             'pdo_drivers' => \PDO::getAvailableDrivers(),
             'loaded_extensions' => array_values(array_intersect(
                 get_loaded_extensions(),

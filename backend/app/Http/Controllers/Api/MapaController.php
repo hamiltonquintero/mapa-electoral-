@@ -25,6 +25,20 @@ class MapaController extends Controller
     use AppliesUserScope;
 
     /**
+     * Resolver ID de campaña con fallback inteligente.
+     */
+    protected function resolveCampanaId(Request $request, $user): ?int
+    {
+        $campanaId = $request->input('campana_id')
+            ?? $user->campanas()->first()?->id
+            ?? \App\Models\Campana::where('activa', true)->first()?->id
+            ?? \App\Models\Campana::first()?->id
+            ?? 1;
+
+        return (int) $campanaId;
+    }
+
+    /**
      * Obtener territorios raíz (nivel superior accesible por el usuario).
      * 
      * @param Request $request
@@ -33,12 +47,9 @@ class MapaController extends Controller
     public function index(Request $request): JsonResponse
     {
         $user = $request->user();
-        $campanaId = $request->input('campana_id')
-            ?? $user->campanas()->first()?->id
-            ?? \App\Models\Campana::where('activa', true)->first()?->id
-            ?? \App\Models\Campana::first()?->id;
+        $campanaId = $this->resolveCampanaId($request, $user);
 
-        if (!$campanaId || !$user->hasAccessToCampana($campanaId)) {
+        if (!$campanaId || (!$user->hasRole('Superadministrador') && !$user->hasAccessToCampana($campanaId))) {
             return response()->json([
                 'message' => 'Debe especificar una campaña válida'
             ], 400);
@@ -94,9 +105,9 @@ class MapaController extends Controller
     public function hijos(Request $request, string $territorioId): JsonResponse
     {
         $user = $request->user();
-        $campanaId = $request->input('campana_id');
+        $campanaId = $this->resolveCampanaId($request, $user);
 
-        if (!$campanaId || !$user->hasAccessToCampana($campanaId)) {
+        if (!$campanaId || (!$user->hasRole('Superadministrador') && !$user->hasAccessToCampana($campanaId))) {
             return response()->json([
                 'message' => 'Debe especificar una campaña válida'
             ], 400);
@@ -244,7 +255,7 @@ class MapaController extends Controller
     public function geojsonMultiple(Request $request): JsonResponse
     {
         $user = $request->user();
-        $campanaId = $request->input('campana_id');
+        $campanaId = $this->resolveCampanaId($request, $user);
         $territorioIds = $request->input('ids', []);
 
         if (empty($territorioIds)) {
@@ -306,7 +317,7 @@ class MapaController extends Controller
     public function puestos(Request $request, string $territorioId): JsonResponse
     {
         $user = $request->user();
-        $campanaId = $request->input('campana_id');
+        $campanaId = $this->resolveCampanaId($request, $user);
 
         if (!$user->hasAccessToTerritorio($territorioId)) {
             return response()->json([
@@ -383,7 +394,7 @@ class MapaController extends Controller
     {
         $user = $request->user();
         $territorioId = $request->input('territorio_id');
-        $campanaId = $request->input('campana_id');
+        $campanaId = $this->resolveCampanaId($request, $user);
 
         if (!$territorioId || !$user->hasAccessToTerritorio($territorioId)) {
             return response()->json([
@@ -446,7 +457,7 @@ class MapaController extends Controller
     public function estadisticas(Request $request, string $territorioId): JsonResponse
     {
         $user = $request->user();
-        $campanaId = $request->input('campana_id');
+        $campanaId = $this->resolveCampanaId($request, $user);
 
         if (!$user->hasAccessToTerritorio($territorioId)) {
             return response()->json([
@@ -454,7 +465,7 @@ class MapaController extends Controller
             ], 403);
         }
 
-        if (!$campanaId || !$user->hasAccessToCampana($campanaId)) {
+        if (!$campanaId || (!$user->hasRole('Superadministrador') && !$user->hasAccessToCampana($campanaId))) {
             return response()->json([
                 'message' => 'Debe especificar una campaña válida'
             ], 400);
@@ -487,7 +498,9 @@ class MapaController extends Controller
             ->count();
 
         $puestosCenso = PuestoVotacion::whereIn('territorio_id', $territorioIds);
-        $totalCenso = (int) $puestosCenso->sum('censo_total');
+        $totalCenso = \Illuminate\Support\Facades\Schema::hasColumn('puestos_votacion', 'censo_total')
+            ? (int) $puestosCenso->sum('censo_total')
+            : 0;
         $totalMesas = (int) $puestosCenso->sum('total_mesas');
         $totalPuestos = (int) $puestosCenso->count();
 
@@ -705,7 +718,7 @@ class MapaController extends Controller
     public function simpatizantes(Request $request, string $territorioId): JsonResponse
     {
         $user = $request->user();
-        $campanaId = $request->input('campana_id');
+        $campanaId = $this->resolveCampanaId($request, $user);
         $puestoId  = $request->input('puesto_id');
         $mesa      = $request->input('mesa');
         $porPagina = min((int) $request->input('por_pagina', 50), 100);

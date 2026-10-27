@@ -33,7 +33,17 @@ class SimpatizanteSeeder extends Seeder
         }
 
         $superadmin = DB::table('users')->where('email', 'superadmin@mapa.com')->first();
-        $puestos    = DB::table('puestos_votacion')->get();
+        
+        // Asociar campaña a todos los usuarios del sistema
+        $allUsers = DB::table('users')->get();
+        foreach ($allUsers as $u) {
+            DB::table('usuario_campana')->updateOrInsert(
+                ['usuario_id' => $u->id, 'campana_id' => $campana->id],
+                ['created_at' => now(), 'updated_at' => now()]
+            );
+        }
+
+        $puestos = DB::table('puestos_votacion')->get();
 
         $this->command->info("✓ Puestos de votación encontrados: {$puestos->count()}");
 
