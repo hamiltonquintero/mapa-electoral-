@@ -103,6 +103,8 @@ class PuestoVotacionSeeder extends Seeder
         }
 
         $total = DB::table('puestos_votacion')->count();
-        $this->command->info("✓ Sincronizados con éxito {$total} puestos de votación en todos los 27 municipios de Caldas.");
+        if ($this->command) {
+            $this->command->info("✓ Sincronizados con éxito {$total} puestos de votación en todos los 27 municipios de Caldas.");
+        }
     }
 }
