@@ -32,7 +32,9 @@ class SimpatizanteSeeder extends Seeder
             $this->command->info('✓ Usando campaña: ' . $campana->nombre);
         }
 
-        $superadmin = DB::table('users')->where('email', 'superadmin@mapa.com')->first();
+        $superadminId = DB::table('users')->where('email', 'superadmin@mapa.com')->value('id') 
+            ?? DB::table('users')->value('id') 
+            ?? 1;
         
         // Asociar campaña a todos los usuarios del sistema
         $allUsers = DB::table('users')->get();
@@ -45,7 +47,9 @@ class SimpatizanteSeeder extends Seeder
 
         $puestos = DB::table('puestos_votacion')->get();
 
-        $this->command->info("✓ Puestos de votación encontrados: {$puestos->count()}");
+        if ($this->command) {
+            $this->command->info("✓ Puestos de votación encontrados: {$puestos->count()}");
+        }
 
         $cifrar    = fn($t) => base64_encode($t);
         $hashCed   = fn($c) => hash_hmac('sha256', $c, 'demo_key_' . $campana->id);
@@ -75,7 +79,7 @@ class SimpatizanteSeeder extends Seeder
                 $ap2    = $apellidos[array_rand($apellidos)];
 
                 $lote[] = [
-                    'id'               => Str::uuid(),
+                    'id'               => (string) Str::uuid(),
                     'campana_id'       => $campana->id,
                     'nombres'          => $nom,
                     'apellidos'        => "$ap1 $ap2",
@@ -87,7 +91,7 @@ class SimpatizanteSeeder extends Seeder
                     'puesto_id'        => $puesto->id,
                     'mesa'             => rand(1, max(1, $puesto->total_mesas)),
                     'estado'           => 'validado',
-                    'creado_por'       => $superadmin->id,
+                    'creado_por'       => $superadminId,
                     'created_at'       => now(),
                     'updated_at'       => now(),
                 ];
@@ -110,7 +114,9 @@ class SimpatizanteSeeder extends Seeder
         }
 
         $total = DB::table('simpatizantes')->where('campana_id', $campana->id)->count();
-        $this->command->info("✓ Total simpatizantes creados: $total");
+        if ($this->command) {
+            $this->command->info("✓ Total simpatizantes creados: $total");
+        }
 
         // Resumen por municipio
         $municipios = DB::table('territorios')
@@ -120,15 +126,16 @@ class SimpatizanteSeeder extends Seeder
         // Contar directamente en BD
         $conteoPorMun = DB::table('simpatizantes as s')
             ->join('territorios as t', 's.territorio_id', '=', 't.id')
-            ->join('territorios as m', 't.padre_id', '=', 'm.id')
             ->where('s.campana_id', $campana->id)
-            ->selectRaw('m.nombre as municipio, COUNT(*) as total')
-            ->groupBy('m.nombre')
+            ->selectRaw('t.nombre as municipio, COUNT(*) as total')
+            ->groupBy('t.nombre')
             ->orderByDesc('total')
             ->get();
 
-        foreach ($conteoPorMun as $row) {
-            $this->command->info("  → {$row->municipio}: {$row->total} simpatizantes");
+        if ($this->command) {
+            foreach ($conteoPorMun as $row) {
+                $this->command->info("  → {$row->municipio}: {$row->total} simpatizantes");
+            }
         }
     }
 }

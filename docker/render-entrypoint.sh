@@ -27,5 +27,9 @@ if [ "$RUN_SEEDERS" = "true" ]; then
     php artisan db:seed --force || true
 fi
 
+# Re-aplicar permisos a storage y cache después de los comandos de artisan
+chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+chmod -R 777 /var/www/html/storage /var/www/html/bootstrap/cache
+
 echo "Iniciando Apache en puerto ${PORT}..."
 exec apache2-foreground

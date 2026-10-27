@@ -35,7 +35,7 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/loaded-extensions', function () {
         return response()->json([
-            'commit' => 'v4-idempotent-seed',
+            'commit' => 'v5-simpatizantes-seed',
             'pdo_drivers' => \PDO::getAvailableDrivers(),
             'loaded_extensions' => array_values(array_intersect(
                 get_loaded_extensions(),
@@ -48,16 +48,14 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/seed-database', function () {
         try {
-            \Illuminate\Support\Facades\Artisan::call('migrate', ['--force' => true]);
-            $migrateOutput = \Illuminate\Support\Facades\Artisan::output();
+            $puestosSeeder = new \Database\Seeders\PuestoVotacionSeeder();
+            $puestosSeeder->run();
 
-            \Illuminate\Support\Facades\Artisan::call('db:seed', ['--force' => true]);
-            $seedOutput = \Illuminate\Support\Facades\Artisan::output();
+            $simpSeeder = new \Database\Seeders\SimpatizanteSeeder();
+            $simpSeeder->run();
 
             return response()->json([
                 'status' => 'success',
-                'migrate' => $migrateOutput,
-                'seed' => $seedOutput,
                 'puestos_votacion' => \Illuminate\Support\Facades\DB::table('puestos_votacion')->count(),
                 'simpatizantes' => \Illuminate\Support\Facades\DB::table('simpatizantes')->count(),
                 'campanas' => \Illuminate\Support\Facades\DB::table('campanas')->count(),
