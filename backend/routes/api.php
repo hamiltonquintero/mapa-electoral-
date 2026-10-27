@@ -30,6 +30,15 @@ Route::prefix('v1')->group(function () {
         }
     });
 
+    Route::get('/loaded-extensions', function () {
+        return response()->json([
+            'commit' => '3a9f930',
+            'pdo_drivers' => \PDO::getAvailableDrivers(),
+            'db_connection' => config('database.default'),
+            'database_url' => env('DATABASE_URL') ? 'configured' : 'missing',
+        ]);
+    });
+
     // Ruta fallback para peticiones sin token
     Route::get('/login', fn() => response()->json(['message' => 'No autenticado.'], 401))->name('login');
 
