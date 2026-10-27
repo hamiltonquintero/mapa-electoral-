@@ -21,14 +21,7 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // ── PostGIS (solo PostgreSQL) ─────────────────────────
-        if (config('database.default') === 'pgsql') {
-            try {
-                DB::statement('CREATE EXTENSION IF NOT EXISTS postgis');
-            } catch (\Exception $e) {
-                Log::warning('No se pudo crear extensión PostGIS: ' . $e->getMessage());
-            }
-        }
+        // ── PostGIS ya está habilitado en las migraciones ─────
 
         // ── Claves de cifrado (solo producción) ──────────────
         if (app()->environment('production')) {
