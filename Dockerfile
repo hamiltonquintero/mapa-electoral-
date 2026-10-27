@@ -1,31 +1,13 @@
 FROM php:8.3-apache
 
-# Instalar dependencias del sistema requeridas por Laravel, PostgreSQL y MySQL
-RUN apt-get update && apt-get install -y \
-    libpng-dev \
-    libjpeg-dev \
-    libfreetype6-dev \
-    libzip-dev \
-    libpq-dev \
-    libicu-dev \
-    unzip \
-    git \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
+# Herramienta oficial recomendada para instalar extensiones PHP en Docker
+COPY --from=mlocati/php-extension-installer /usr/bin/install-php-extensions /usr/local/bin/
 
-# Configurar e instalar extensiones PHP
-RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-configure intl \
-    && docker-php-ext-install -j$(nproc) \
-        pdo_mysql \
-        pdo_pgsql \
-        pgsql \
-        gd \
-        zip \
-        bcmath \
-        intl \
-        opcache \
-    && docker-php-ext-enable pdo_pgsql pgsql pdo_mysql
+# Instalar extensiones requeridas para Laravel (PostgreSQL, MySQL, GD, Zip, etc.)
+RUN install-php-extensions pdo_pgsql pgsql pdo_mysql gd zip bcmath intl opcache
+
+# Instalar herramientas básicas del sistema
+RUN apt-get update && apt-get install -y git unzip curl && rm -rf /var/lib/apt/lists/*
 
 # Habilitar módulo rewrite de Apache
 RUN a2enmod rewrite
